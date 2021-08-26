@@ -3,44 +3,59 @@ package main
 import (
 	"net/http"
 
+	"github.com/astaxie/beego/logs"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/sakurafisch/qnote-go/entity"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/sakurafisch/qnote-go/repository"
+	"github.com/sakurafisch/qnote-go/router"
 )
 
-var db *gorm.DB
-
-func connDB() (db *gorm.DB, err error) {
-	dsn := "qnote:pa$$w0rd@tcp(127.0.0.1:3306)/qnote?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	return
+func initRouters(r *gin.Engine) {
+	router.PublicControllerInit(r)
 }
 
 func showTheFirstUser(context *gin.Context) {
 	var user entity.User
-	db.First(&user, 1)
+	repository.MainDB.First(&user, 1)
 	context.JSON(http.StatusOK, user)
 }
 
-func main() {
-	var err error
-	db, err = connDB()
-	if err != nil {
-		panic("failed to connect database")
-	}
-
-	db.AutoMigrate(&entity.User{})
-
+func createDebugNode(app *gin.Engine) {
 	username := "testrole"
+	email := "testrole@test.com"
 	password := "cmd"
-	user := &entity.User{Username: username, Password: password}
-	db.Create(user)
+	passwdHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		logs.Error(err)
+		panic("Failed to generate passwdHash using bcrypt")
+	}
+	repository.MainDB.Create(&entity.User{
+		Username:   username,
+		Email:      email,
+		PasswdHash: string(passwdHash),
+	})
+	testRouter := app.Group("/test/user")
+	testRouter.GET("/list", showTheFirstUser)
+}
 
-	app := gin.New()
-	app.Use(gin.Logger())
-	app.Use(gin.Recovery())
-	userRouter := app.Group("/user")
-	userRouter.GET("/list", showTheFirstUser)
-	app.Run()
+func main() {
+	repository.InitDB()
+	// var err error
+	// repository.MainDB, err = repository.ConnDB()
+	// if err != nil {
+	// 	panic("failed to connect database")
+	// }
+
+	// repository.MainDB.AutoMigrate(&entity.User{})
+
+	app := gin.Default()
+	app.Use(cors.Default())
+	initRouters(app)
+
+	createDebugNode(app)
+
+	app.Run(":8080")
 }

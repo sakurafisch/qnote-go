@@ -9,6 +9,19 @@
 - GORM
 - MYSQL
 
+# Run
+
+```
+go mod tidy -v
+go run main.go
+```
+
+or
+```
+go mod tidy -v
+fresh
+```
+
 ## API
 
 Plz refer to `api.md`
