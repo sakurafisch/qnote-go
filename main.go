@@ -9,6 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/sakurafisch/qnote-go/entity"
+	"github.com/sakurafisch/qnote-go/middleware"
 	"github.com/sakurafisch/qnote-go/repository"
 	"github.com/sakurafisch/qnote-go/router"
 )
@@ -38,6 +39,7 @@ func createDebugNode(app *gin.Engine) {
 		PasswdHash: string(passwdHash),
 	})
 	testRouter := app.Group("/test/user")
+	testRouter.Use(middleware.IsAuthorized)
 	testRouter.GET("/list", showTheFirstUser)
 }
 
