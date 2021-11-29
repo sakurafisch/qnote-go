@@ -1,6 +1,6 @@
 # qnote-go
 
-本项目是对 qnote-backend 的重写。
+本项目是对 qnote-backend 的重写。本项目正处于并将长期处于社会主义初级阶段。
 
 ## 技术栈
 
