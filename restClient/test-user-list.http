@@ -1,0 +1,2 @@
+GET http://localhost:8080/test/user/list
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiIiwiZXhwIjoxNjQxMzkzMTQ2LCJpYXQiOjE2NDEyMjAzNDYsImlzcyI6InNha3VyYWZpc2NoIn0.uftSu7mVTD9xLcBaewiXpuiToyU2JXExrcae2R2PnRs
