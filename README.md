@@ -29,8 +29,13 @@ Plz refer to `api.md`
 ## SQL
 
 ```mysql
-GRANT ALL PRIVILEGES ON qnote.* TO 'qnote'@'localhost';
+# MySQL 8.0
+CREATE USER 'qnote' IDENTIFIED BY 'pa$$w0rd';
+CREATE DATABASE qnote CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+GRANT ALL PRIVILEGES ON qnote.* TO 'qnote';
 ```
+
+如果您的 MySQL 版本低于 8.0，请参考 [此贴](https://dba.stackexchange.com/questions/76788/create-a-mysql-database-with-charset-utf-8) 来设置数据库的字符集。
 
 ## reference
 
