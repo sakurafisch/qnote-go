@@ -6,10 +6,13 @@ import (
 
 	"github.com/astaxie/beego/logs"
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 )
 
-const secretKey = "secret"
-const issuer = "sakurafisch"
+// const secretKey string = "acb52590-e620-4e0d-8686-ea613346afca"
+var secretKey string = uuid.New().String()
+
+const issuer string = "sakurafisch"
 
 type authCustomClaims struct {
 	UserId uint   `json:"userId"`
