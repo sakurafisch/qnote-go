@@ -15,7 +15,7 @@ import (
 )
 
 func initRouters(r *gin.Engine) {
-	router.PublicControllerInit(r)
+	router.PublicControllerInit(r, "/")
 }
 
 func showTheFirstUser(context *gin.Context) {
@@ -57,7 +57,7 @@ func main() {
 	app.Use(cors.Default())
 	initRouters(app)
 
-	createDebugNode(app)
+	//createDebugNode(app)
 
 	app.Run(":8080")
 }

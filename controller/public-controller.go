@@ -12,7 +12,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func SignIn(c *gin.Context) {
+var PublicController publicController
+
+type publicController struct{}
+
+func (this *publicController) SignIn(c *gin.Context) {
 	email := strings.ToLower(c.PostForm("email"))
 	password := c.PostForm("password")
 	user, err := repository.UserRepository.GetByEmail(email)
@@ -62,9 +66,11 @@ func SignIn(c *gin.Context) {
 	})
 }
 
-func Register(c *gin.Context) {
+func (this *publicController) Register(c *gin.Context) {
 	email := strings.ToLower(c.PostForm("email"))
+	logs.Info("The email addr is " + email)
 	password := c.PostForm("password")
+	logs.Info(password)
 	user, err := repository.UserRepository.GetByEmail(email)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		logs.Error(err)
@@ -118,6 +124,33 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 		"msg":   "Register successed",
+		"valid": true,
+	})
+}
+
+func (this *publicController) CheckEmail(c *gin.Context) {
+	email := strings.ToLower(c.PostForm("email"))
+	logs.Info(email)
+	user, err := repository.UserRepository.GetByEmail(email)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		logs.Error(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg":   "public-controller: Failed to finish UserRepository.GetByEmail",
+			"valid": false,
+		})
+		c.Abort()
+		return
+	}
+	if user != nil {
+		c.JSON(http.StatusConflict, gin.H{
+			"msg":   "Username or Email have been used",
+			"valid": false,
+		})
+		c.Abort()
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "This email addr is available.",
 		"valid": true,
 	})
 }

@@ -1,0 +1,6 @@
+POST http://localhost:8080/checkEmail
+Content-Type: application/json
+
+{
+    "email": "sdifjwe@isdfj.com"
+}
