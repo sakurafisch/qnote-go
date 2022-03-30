@@ -13,7 +13,7 @@ var UserRepository userRepository
 
 type userRepository struct{}
 
-func (this *userRepository) GetByEmail(email string) (*entity.User, error) {
+func (*userRepository) GetByEmail(email string) (*entity.User, error) {
 	var user entity.User
 	db := MainDB.First(&user, "email = ?", email)
 	if err := db.Error; err != nil {

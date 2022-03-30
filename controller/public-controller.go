@@ -12,11 +12,11 @@ import (
 	"gorm.io/gorm"
 )
 
-var PublicController publicController
+var publicController publicControllerStruct
 
-type publicController struct{}
+type publicControllerStruct struct{}
 
-func (this *publicController) SignIn(c *gin.Context) {
+func (*publicControllerStruct) signIn(c *gin.Context) {
 	email := strings.ToLower(c.PostForm("email"))
 	password := c.PostForm("password")
 	user, err := repository.UserRepository.GetByEmail(email)
@@ -66,7 +66,7 @@ func (this *publicController) SignIn(c *gin.Context) {
 	})
 }
 
-func (this *publicController) Register(c *gin.Context) {
+func (*publicControllerStruct) register(c *gin.Context) {
 	email := strings.ToLower(c.PostForm("email"))
 	logs.Info("The email addr is " + email)
 	password := c.PostForm("password")
@@ -128,7 +128,7 @@ func (this *publicController) Register(c *gin.Context) {
 	})
 }
 
-func (this *publicController) CheckEmail(c *gin.Context) {
+func (*publicControllerStruct) checkEmail(c *gin.Context) {
 	email := strings.ToLower(c.PostForm("email"))
 	logs.Info(email)
 	user, err := repository.UserRepository.GetByEmail(email)
@@ -150,7 +150,7 @@ func (this *publicController) CheckEmail(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"msg": "This email addr is available.",
+		"msg":   "This email addr is available.",
 		"valid": true,
 	})
 }

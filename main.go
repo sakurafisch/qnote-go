@@ -14,10 +14,6 @@ import (
 	"github.com/sakurafisch/qnote-go/router"
 )
 
-func initRouters(r *gin.Engine) {
-	router.PublicControllerInit(r, "/")
-}
-
 func showTheFirstUser(context *gin.Context) {
 	var user entity.User
 	repository.MainDB.First(&user, 1)
@@ -55,7 +51,7 @@ func main() {
 
 	app := gin.Default()
 	app.Use(cors.Default())
-	initRouters(app)
+	router.InitRouter(app)
 
 	//createDebugNode(app)
 
